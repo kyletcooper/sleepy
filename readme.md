@@ -4,21 +4,21 @@ A schema-first & restful API toolkit for Laravel.
 
 > :warning: This package is under active development.
 
-**Contents**
-[Installation](#installation)
-[Setup](#setup)
-[Core Concepts](#core-concepts)
-[Schema](#schema)
-[Attributes](#attributes)
-[Embedding](#embedding)
-[Filtering](#filtering)
-[Sorting](#sorting)
-[Pagination](#pagination)
-[Authentication & Authorization](#authentication--authorization)
-[Discovery](#discovery)
-[Exception Handling](#exception-handling)
-[Commands](#commands)
-[Configuration](#configuration)
+**Contents**<br />
+[Installation](#installation)<br />
+[Setup](#setup)<br />
+[Core Concepts](#core-concepts)<br />
+[Schema](#schema)<br />
+[Attributes](#attributes)<br />
+[Embedding](#embedding)<br />
+[Filtering](#filtering)<br />
+[Sorting](#sorting)<br />
+[Pagination](#pagination)<br />
+[Authentication & Authorization](#authentication--authorization)<br />
+[Discovery](#discovery)<br />
+[Exception Handling](#exception-handling)<br />
+[Commands](#commands)<br />
+[Configuration](#configuration)<br />
 
 # Installation
 
@@ -39,14 +39,14 @@ use WRD\Sleepy\Support\Facades\API;
 
 API::base('/api', function() {
 
-    API::group( '/v1', function(){
-		// This is optional, see authentication below.
-        API::login();
+  API::group( '/v1', function(){
+    // This is optional, see authentication below.
+    API::login();
 
-		// Setup the collection & self routes for your model.
-		API::model( Post::class );
+    // Setup the collection & self routes for your model.
+    API::model( Post::class );
 
-    });
+  });
 });
 ```
 
@@ -67,47 +67,52 @@ use WRD\Sleepy\Fields\Attributes\Attr;
 
 class Post extends Model
 {
-    use HasApi;
+  use HasApi;
 
 	// This defines the schema of your model.
 	public static function attributes(): array {
-        return [
-			// This will automatically determine the model's key.
-            'id' => Attr::key(),
-			// This will be the class basename of the model.
-            'type' => Attr::basename(),
+    return [
+		  // This will automatically determine the model's key.
+      'id' => Attr::key(),
+
+      // This will be the class basename of the model.
+      'type' => Attr::basename(),
+
 			// This will pull from/write to the 'title' property from the model.
-            'title' => Attr::string()->required(),
+      'title' => Attr::string()->required(),
+
 			// This will pull from/write to the 'body' property from the model.
 			'body' => Attr::string()->required(),
+
 			// You can prevent users from updating a field using ->readonly()
 			// Here, 'url' is the format of the string.
-            'thumbnail' => Attr::string( 'url' )->readonly(),
-        ];
-    }
+      'thumbnail' => Attr::string( 'url' )->readonly(),
+    ];
+  }
 
 	// Controls the ways consumers can filter your model's collection endpoint.
-    public static function filters(): array{
-        return [
-			// Search allows you to do a fuzzy search across multiple columns.
-			// Here, 'search' is the name of the query parameter. The names of the columns are passed to the filter.
-            'search' => Filters::search('title,body'),
-        ];
-    }
+  public static function filters(): array{
+    return [
+      // Search allows you to do a fuzzy search across multiple columns.
+      // Here, 'search' is the name of the query parameter. The names of the columns are passed to the filter.
+      'search' => Filters::search('title,body'),
+    ];
+  }
 
 	// Controls the ways consumers can sort your model's collection endpoint.
-    public static function sorts(): array{
-        return [
-			// Allow sorting by the title alphabetically.
-            'title' => Sorts::alphabetical( "title" ),
+  public static function sorts(): array{
+    return [
+      // Allow sorting by the title alphabetically.
+      'title' => Sorts::alphabetical( "title" ),
+
 			// Here, 'title' is the value that must be passed to the 'order_by' query parameter. The name of the database column is passed to the sort.
 			'published' => Sorts::date( "created_at" ),
-        ];
-    }
+    ];
+  }
 }
 ```
 
-And you're done! You
+And you're done! You can now access your routes at https://example.com/api/v1/post and https://example.com/api/v1/post/:key. You can now search and sort your collection, create new posts and delete or update existing ones.
 
 > :warning: Your model routes will automatically have authorization guards in place, acting on the assumption that you are using the Laravel policy system, so you'll need to be authenticated to see these endpoints.
 
@@ -120,11 +125,11 @@ You're not required to attach all of your routes and endpoints to models, of cou
 
 API::base('/api', function() {
 
-    API::group( '/v1', function(){
+  API::group( '/v1', function(){
 
-		API::route( '/custom', function(){
+    API::route( '/custom', function(){
 
-			API::endpoint( 'GET' )
+      API::endpoint( 'GET' )
 				->fields([
 					'your_name' => Field::string()->default('world')
 				])
@@ -136,7 +141,7 @@ API::base('/api', function() {
 
 		});
 
-    });
+  });
 
 });
 ```
@@ -307,27 +312,27 @@ use WRD\Sleepy\Fields\Attributes\Attr;
 
 class Post extends Model
 {
-    use HasApi;
+  use HasApi;
 
 	// This defines the schema of your model.
 	public static function attributes(): array {
-        return [
-			// Key is ignored for 'key' and 'basename'
-            'id' => Attr::key(),
-            'type' => Attr::basename(),
+    return [
+      // Key is ignored for 'key' and 'basename'
+      'id' => Attr::key(),
+      'type' => Attr::basename(),
 
 			// 'title' & 'body' pull their values from the models database columns.
-            'title' => Attr::string()->required(),
+      'title' => Attr::string()->required(),
 			'body' => Attr::string()->required(),
 
 			// 'thumbnail' pulls from an Eloquent attribute.
-            'thumbnail' => Attr::string( 'url' )->readonly(),
+      'thumbnail' => Attr::string( 'url' )->readonly(),
 
 			// 'creator' writes to a Eloquent relationship.
 			// This field is writeonly by default, see `Attr::belongsTo` in Core Attributes.
 			'creator' => Attr::belongsTo( User::class, 'creator_id' ),
-        ];
-    }
+    ];
+  }
 }
 ```
 
@@ -363,15 +368,15 @@ class Post extends Model{
 	use HasApi; // Or just HasEmbed.
 
 	public static function embeds(): array{
-        return [
-			// Sleepy will access the model's 'creator' relationship and include a reference to the foriegn model.
-            'creator' => User::embed(),
-        ];
-    }
+    return [
+      // Sleepy will access the model's 'creator' relationship and include a reference to the foriegn model.
+      'creator' => User::embed(),
+    ];
+  }
 }
 ```
 
-Links to the related models will be available under the `_links` key in the response. You can learn more about links in the [discover section](#discovery).
+Links to the related models will be available under the `_links` key in the response. You can learn more about links in the [discovery section](#discovery).
 
 To include the related model in the response, you can send the relationship name via the `_embed` query parameter. Multiple embeds can be provided, seperated by a comma. You can include nested relationships using dot notation.
 
@@ -389,13 +394,13 @@ POST https://example.com/api/v1/post/1?_embed=creator,creator.organisation
 		"self": {
 			"href": "https://sitepuppet.test/api/v1/post/9"
 		},
-        "creator": {
-          "href": "https://sitepuppet.test/api/v1/user/1",
-          "embeddable": true
-        },
+    "creator": {
+      "href": "https://sitepuppet.test/api/v1/user/1",
+      "embeddable": true
+    },
 	},
 	"_embedded": {
-        "creator": {
+      "creator": {
 			"id": 1,
 			"type": "user",
 			"name": "Kyle Cooper",
@@ -448,16 +453,16 @@ use WRD\Sleepy\Fields\Filters\Filters;
 
 class Post extends Model
 {
-    use HasApi; // Or just `HasFilters`.
+  use HasApi; // Or just `HasFilters`.
 
 	// Provides the allowed filters.
-    public static function filters(): array{
-        return [
-			// The key is the name of the filter.
+  public static function filters(): array{
+    return [
+		  // The key is the name of the filter.
 			// For example, the consumer would include '?search=hello' to search the title & body columns.
-            'search' => Filters::search('title,body'),
-        ];
-    }
+      'search' => Filters::search('title,body'),
+    ];
+  }
 
 	// ...
 }
@@ -524,16 +529,15 @@ use WRD\Sleepy\Fields\Filters\Filters;
 
 class Post extends Model
 {
-    use HasApi; // Or just `HasSorts`.
+  use HasApi; // Or just `HasSorts`.
 
 	public static function sorts(): array{
-        return [
-            'title' => Sorts::alphabetical( "title" ),
+    return [
+      'title' => Sorts::alphabetical( "title" ),
 			'published' => Sorts::date( "created_at" ),
-        ];
-    }
+    ];
+  }
 }
-
 ```
 
 ## Core Sorts
