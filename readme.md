@@ -94,8 +94,8 @@ class Post extends Model
 	public static function filters(): array{
 		return [
 			// Search allows you to do a fuzzy search across multiple columns.
-      		// Here, 'search' is the name of the query parameter. The names of the columns are passed to the filter.
-      		'search' => Filters::search('title,body'),
+			// Here, 'search' is the name of the query parameter. The names of the columns are passed to the filter.
+			'search' => Filters::search('title,body'),
 		];
   	}
 
@@ -104,7 +104,7 @@ class Post extends Model
 		return [
 			// Allow sorting by the title alphabetically.
 			'title' => Sorts::alphabetical( "title" ),
-
+			
 			// Here, 'title' is the value that must be passed to the 'order_by' query parameter. The name of the database column is passed to the sort.
 			'published' => Sorts::date( "created_at" ),
 		];
