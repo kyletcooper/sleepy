@@ -25,7 +25,7 @@ A schema-first & restful API toolkit for Laravel.
 You can install Sleepy using Composer:
 
 ```
-composer install wrd/sleepy
+composer require wrd/sleepy
 ```
 
 # Setup
@@ -74,16 +74,16 @@ class Post extends Model
 		return [
 			// This will automatically determine the model's key.
 			'id' => Attr::key(),
-			
+
 			// This will be the class basename of the model.
 			'type' => Attr::basename(),
-			
+
 			// This will pull from/write to the 'title' property from the model.
 			'title' => Attr::string()->required(),
-			
+
 			// This will pull from/write to the 'body' property from the model.
 			'body' => Attr::string()->required(),
-			
+
 			// You can prevent users from updating a field using ->readonly()
 			// Here, 'url' is the format of the string.
 			'thumbnail' => Attr::string( 'url' )->readonly(),
@@ -104,7 +104,7 @@ class Post extends Model
 		return [
 			// Allow sorting by the title alphabetically.
 			'title' => Sorts::alphabetical( "title" ),
-			
+
 			// Here, 'title' is the value that must be passed to the 'order_by' query parameter. The name of the database column is passed to the sort.
 			'published' => Sorts::date( "created_at" ),
 		];
@@ -126,9 +126,9 @@ You're not required to attach all of your routes and endpoints to models, of cou
 API::base('/api', function() {
 
 	API::group( '/v1', function(){
-	
+
 		API::route( '/custom', function(){
-		
+
 			API::endpoint( 'GET' )
 			->fields([
 				'your_name' => Field::string()->default('world')
@@ -138,9 +138,9 @@ API::base('/api', function() {
 				return 'Hello ' . $request->fields()->get('world')
 			})
 			->responses( 200 )
-		
+
 		});
-	
+
 	});
 
 });
@@ -320,14 +320,14 @@ class Post extends Model
 			// Key is ignored for 'key' and 'basename'
 			'id' => Attr::key(),
 			'type' => Attr::basename(),
-			
+
 			// 'title' & 'body' pull their values from the models database columns.
 			'title' => Attr::string()->required(),
 			'body' => Attr::string()->required(),
-			
+
 			// 'thumbnail' pulls from an Eloquent attribute.
 			'thumbnail' => Attr::string( 'url' )->readonly(),
-			
+
 			// 'creator' writes to a Eloquent relationship.
 			// This field is writeonly by default, see `Attr::belongsTo` in Core Attributes.
 			'creator' => Attr::belongsTo( User::class, 'creator_id' ),
@@ -366,7 +366,7 @@ use WRD\Sleepy\Fields\HasApi;
 
 class Post extends Model{
 	use HasApi; // Or just HasEmbed.
-	
+
 	public static function embeds(): array{
 		return [
 			// Sleepy will access the model's 'creator' relationship and include a reference to the foriegn model.
@@ -454,7 +454,7 @@ use WRD\Sleepy\Fields\Filters\Filters;
 class Post extends Model
 {
 	use HasApi; // Or just `HasFilters`.
-	
+
 	// Provides the allowed filters.
 	public static function filters(): array{
 		return [
@@ -463,7 +463,7 @@ class Post extends Model
 			'search' => Filters::search('title,body'),
 		];
 	}
-	
+
 	// ...
 }
 ```
@@ -530,7 +530,7 @@ use WRD\Sleepy\Fields\Filters\Filters;
 class Post extends Model
 {
 	use HasApi; // Or just `HasSorts`.
-	
+
 	public static function sorts(): array{
 		return [
 			'title' => Sorts::alphabetical( "title" ),
