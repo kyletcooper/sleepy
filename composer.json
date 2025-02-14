@@ -1,0 +1,36 @@
+{
+	"name": "wrd/sleepy",
+	"description": "API builder for Laravel",
+	"version": "0.0.1",
+	"type": "library",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"WRD\\Sleepy\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "kylethomascooper",
+			"email": "kyle@wrd.agency"
+		}
+	],
+	"require": {
+		"php": "^8.1"
+	},
+	"require-dev": {
+		"laravel/framework": "^10"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"sort-packages": true,
+		"preferred-install": "dist",
+		"optimize-autoloader": true
+	},
+	"laravel": {
+		"providers": [
+			"WRD\\Sleepy\\Providers\\SleepyServiceProvider"
+		]
+	}
+}
