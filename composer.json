@@ -31,6 +31,9 @@
 	"laravel": {
 		"providers": [
 			"WRD\\Sleepy\\Providers\\SleepyServiceProvider"
-		]
+		],
+		"aliases": {
+			"API": "WRD\\Sleepy\\Support\\Facades\\API"
+		}
 	}
 }
