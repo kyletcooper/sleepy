@@ -10,6 +10,7 @@ use WRD\Sleepy\Support\Tree\NodeType;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use WRD\Sleepy\Http\Exceptions\ApiUnauthenticatedException;
 use WRD\Sleepy\Http\Exceptions\ApiUnauthorizedException;
+use WRD\Sleepy\Http\Requests\ApiRequest;
 use WRD\Sleepy\Schema\Layouts\Api\Route as ApiRoute;
 use WRD\Sleepy\Schema\Layouts\Link;
 
@@ -166,7 +167,7 @@ abstract class ApiNode{
 		return ! is_null( $publicChild );
 	}
 
-	public function checkAuth( Request $request, ...$params ): void {
+	public function checkAuth( ApiRequest $request, ...$params ): void {
 		$callbacks = $this->getAuthCallbacks();
 
 		if( count( $callbacks ) === 0 ){
