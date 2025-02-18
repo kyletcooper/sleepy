@@ -9,8 +9,8 @@ use WRD\Sleepy\Schema\Schema;
 trait HasAttributes{
 	static public function attributes(): array{
 		return [
-			'id' => Attribute::key(),
-			'type' => Attribute::basename(),
+			'id' => Attr::key(),
+			'type' => Attr::basename(),
 		];
 	}
 	
