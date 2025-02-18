@@ -116,7 +116,7 @@ trait HasApiModel{
 		API::route( "/$base", function() { 
 				
 			$index = API::endpoint( 'GET', [static::controller(), "index" ] )
-				->auth( fn() => Gate::allows( 'viewAll', static::class ) )
+				->auth( fn() => Gate::allows( 'viewAny', static::class ) )
 				->fields( static::getIndexFields() )
 				->responses( 200, 400, 401, 403 )
 				->describe( 'Show the collection of models.' );
@@ -148,7 +148,7 @@ trait HasApiModel{
 				->describe( 'Update the model.' );
 			
 			$delete = API::endpoint( 'DELETE', [static::controller(), "destroy" ] )
-				->auth( fn( ApiRequest $req, Model $model ) => Gate::allows( 'destroy', $model ) )
+				->auth( fn( ApiRequest $req, Model $model ) => Gate::allows( 'delete', $model ) )
 				->fields( static::getDestroyFields() )
 				->responses( 204, 400, 401, 403, 404 )
 				->describe( 'Delete the model.' );
