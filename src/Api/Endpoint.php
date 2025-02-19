@@ -38,7 +38,7 @@ class Endpoint extends ApiNode{
 		}
 	}
 
-	public function action(callable $callback){
+	public function action(callable $callback): static{
 		$this->callback = $callback;
 
 		return $this;

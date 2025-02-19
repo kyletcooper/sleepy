@@ -35,7 +35,7 @@ class ModelGenerator extends Generator{
 		API::route( $this->path, function() { 
 				
 			$index = API::endpoint( 'GET', [$this->controller, "index" ] )
-				->auth( fn() => Gate::allows( 'viewAll', static::class ) )
+				->auth( fn() => Gate::allows( 'viewAny', $this->class ) )
 				->fields( $this->class::getFields( 'index' ) )
 				->responses( 200, 400, 401, 403 )
 				->describe( 'Show the collection of models.' );

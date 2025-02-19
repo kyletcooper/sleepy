@@ -10,7 +10,6 @@ use WRD\Sleepy\Api\Route;
 use WRD\Sleepy\Fields\Links\HasLinks;
 use WRD\Sleepy\Schema\Layouts\Api\Route as LayoutsApiRoute;
 use WRD\Sleepy\Schema\Layouts\Layout;
-use WRD\Sleepy\Schema\Layouts\Link;
 use WRD\Sleepy\Schema\Schema;
 
 class Group extends Layout {

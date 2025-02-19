@@ -1,8 +1,7 @@
 <?php
 
-namespace WRD\Sleepy\Schema\Layouts;
+namespace WRD\Sleepy\Layouts;
 
-use Closure;
 use Illuminate\Pagination\LengthAwarePaginator;
 use WRD\Sleepy\Schema\Schema;
 
@@ -14,8 +13,8 @@ class Pagination extends Layout {
 		$this->subSchema = $subSchema ?? Schema::empty();
 	}
 
-	public function getSchema(): Schema {
-		$linkSchema = (new Link)->getSchema();
+	public function schema(): Schema {
+		$linkSchema = (new Link)->schema();
 
 		return Schema::object()
 			->properties([
@@ -67,13 +66,14 @@ class Pagination extends Layout {
 		];
 	}
 
-	public function getPresenter(): Closure {
-		return function( LengthAwarePaginator $paginator ){
-			return [
-				'items' => $paginator->items(),
-				'meta' => $this->getMeta( $paginator ),
-				'_links' => $this->getLinks( $paginator )
-			];
-		};
+	/**
+	 * @param LengthAwarePaginator $paginator
+	 */
+	public function present( $paginator ): array {
+		return [
+			'items' => $paginator->items(),
+			'meta' => $this->getMeta( $paginator ),
+			'_links' => $this->getLinks( $paginator )
+		];
 	}
 }

@@ -5,7 +5,7 @@ namespace WRD\Sleepy\Fields\Pagination;
 use Illuminate\Database\Eloquent\Builder;
 use WRD\Sleepy\Fields\Pagination\Pagination as PaginationField;
 use WRD\Sleepy\Http\Requests\ApiRequest;
-use WRD\Sleepy\Schema\Layouts\Pagination;
+use WRD\Sleepy\Layouts\Pagination;
 use WRD\Sleepy\Support\HasHooks;
 
 trait HasPagination{
@@ -47,7 +47,7 @@ trait HasPagination{
 				->paginate( $perPage,  ['*'], static::getPageFieldName(), $page )
 				->through( fn( $model ) => $model->toApi() );
 
-			return Pagination::present( $paginator );
+			return (new Pagination)->present( $paginator );
 		} );
 	}
 }

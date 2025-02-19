@@ -3,7 +3,8 @@
 namespace WRD\Sleepy\Fields\Embeds;
 
 use Illuminate\Database\Eloquent\Model;
-use WRD\Sleepy\Schema\Layouts\Link as LayoutsLink;
+use WRD\Sleepy\Fields\Field;
+use WRD\Sleepy\Layouts\Link;
 use WRD\Sleepy\Schema\Schema;
 
 trait HasEmbeds{
@@ -12,7 +13,7 @@ trait HasEmbeds{
 	}
 
 	static public function embed(): Embed{
-		return ( new Embed() )->model( static::class, static::hasEmbedsMergedAttributes() );
+		return new Embed( static::class );
 	}
 	
 	static public function getEmbedFields(): array{
@@ -25,7 +26,7 @@ trait HasEmbeds{
 		 * values that we know are good though.
 		 */
 		return [
-			static::getEmbedFieldsName() => Embed::array( Schema::string() )
+			static::getEmbedFieldsName() => Field::array( Schema::string() )
 				->default( [] )
 				->describe( 'Include related models. You can use dot-notation to include embeds within embeds.' )
 				->examples( $keys ),
@@ -67,7 +68,7 @@ trait HasEmbeds{
 			}
 			
 			if( config("sleepy.include_links_in_schema") ){
-				$links = collect( $embeds )->map(fn() => ( new LayoutsLink() )->getSchema() )->all();
+				$links = collect( $embeds )->map(fn() => ( new Link() )->schema() )->all();
 
 				$schema->mergeIn( Schema::object( [
 					static::getEmbedLinksAttributeName() => Schema::object( $links )->nullable()
@@ -86,7 +87,8 @@ trait HasEmbeds{
 						return null;
 					}
 
-					return LayoutsLink::present( $related->getSelfUrl(), [
+					return (new Link)->present( [
+						'href' => $related->getSelfUrl(),
 						'embeddable' => true
 					]);
 				})

@@ -5,10 +5,13 @@ namespace WRD\Sleepy\Fields\Sorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use WRD\Sleepy\Fields\Sorts\Sort;
 
 class Sorts {
+	use Macroable;
+
 	static public function alphabetical( string $column ): Sort{
 		return (new Sort())
 			->column( $column );

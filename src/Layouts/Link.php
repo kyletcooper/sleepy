@@ -1,6 +1,6 @@
 <?php
 
-namespace WRD\Sleepy\Layout;
+namespace WRD\Sleepy\Layouts;
 
 use Illuminate\Support\Arr;
 use JsonSerializable;
@@ -25,13 +25,27 @@ class Link extends Layout{
 		]);
 	}
 
-	public function present( mixed $value ): JsonSerializable|array|bool|string|int|float{
+	/**
+	 * @param array|string $value
+	 */
+	public function present( $value ): JsonSerializable|array|bool|string|int|float{
 		$url = $value;
 		$meta = [];
 
 		if( is_array( $value ) ){
 			$url = $value['href'];
-			$meta = Arr::except( $value, ['href'] );
+			
+			$meta = Arr::only( $value, [
+				'href',
+				'templated',
+				'type',
+				'deprecation',
+				'name',
+				'profile',
+				'title',
+				'hreflang',
+				'embeddable',
+			] );
 		}
 
 		return [

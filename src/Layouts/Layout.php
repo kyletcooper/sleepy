@@ -1,16 +1,16 @@
 <?php
 
-namespace WRD\Sleepy\Layout;
+namespace WRD\Sleepy\Layouts;
 
 use JsonSerializable;
 use WRD\Sleepy\Schema\Schema;
 
-class Layout{
+abstract class Layout{
 	public function schema(): Schema{
 		return Schema::empty();
 	}
 
-	public function present( mixed $value ): JsonSerializable|array|bool|string|int|float{
+	public function present( $value ): JsonSerializable|array|bool|string|int|float{
 		return json_encode( $value );
 	}
 }

@@ -4,6 +4,7 @@ namespace WRD\Sleepy\Fields\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Validation\Rule;
 use WRD\Sleepy\Fields\Filters\Filter;
 use WRD\Sleepy\Fields\Filters\Value;
@@ -11,6 +12,8 @@ use WRD\Sleepy\Fields\Filters\Operator;
 use WRD\Sleepy\Schema\Schema;
 
 class Filters {
+	use Macroable;
+
 	static public function text( string $column ): Filter{
 		return Filter::string()
 			->operator( [ Operator::Equals, Operator::NotEquals ] )
