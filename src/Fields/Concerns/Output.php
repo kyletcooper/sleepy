@@ -19,13 +19,15 @@ trait Output {
 	}
 
 	static public function layout( Layout $layout ): static{
-		$inst = new static;
-		$inst->layout = $layout;
-		
-		$inst->importSchema( $layout->schema() );
-
-		return $inst;
+		return (new static)->applyLayout( $layout );
 	}
+
+    protected function applyLayout( Layout $layout ): self{
+        $this->layout = $layout;
+		$this->importSchema( $layout->schema() );
+
+        return $this;
+    }
 	
 	public function getOutputValue( string $name, mixed $model, bool $applyLayout = true ): mixed {
 		if( ! is_null( $this->alias ) ){

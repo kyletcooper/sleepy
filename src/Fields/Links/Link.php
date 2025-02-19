@@ -13,6 +13,6 @@ class Link extends Schema{
 	{
 		parent::__construct();
 
-		$this->layout( new LayoutsLink() );
+		$this->applyLayout( new LayoutsLink() );
 	}
 }
