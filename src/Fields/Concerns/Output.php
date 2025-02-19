@@ -5,6 +5,8 @@ namespace WRD\Sleepy\Fields\Concerns;
 use Closure;
 
 trait Output {
+	use Touch;
+	
 	protected ?Closure $readResolver = null;
 
 	public function read( ?Closure $readResolver ): static{
@@ -14,6 +16,10 @@ trait Output {
 	}
 	
 	public function getOutputValue( string $name, mixed $model, bool $applyLayout = true ): mixed {
+		if( ! is_null( $this->alias ) ){
+			$name = $this->alias;
+		}
+
 		$value = null;
 
 		if( ! is_null( $this->readResolver ) ){

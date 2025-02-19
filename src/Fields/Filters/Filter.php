@@ -13,14 +13,12 @@ class Filter extends Field{
 
 	public ?array $operators = null;
 
-	public ?string $column = null;
-
 	public function __construct( array|string $types = "" )
 	{
 		parent::__construct( $types );
 
-		$this->queryCallback = fn( Builder $builder, mixed $value ) =>
-			$builder->where( $this->column, $value->operator->operand(), $value->value );
+		$this->queryCallback = fn( Builder $builder, mixed $value, string $name ) =>
+			$builder->where( $name, $value->operator->operand(), $value->value );
 	}
 
 	public function operator( Operator|array $operators ): static{
@@ -48,12 +46,6 @@ class Filter extends Field{
 		return $this;
 	}
 
-	public function column( ?string $column ): static{
-		$this->column = $column;
-
-		return $this;
-	}
-
 	public function getInputValue(string $name, array $values): Value {
 		$raw = parent::getInputValue( $name, $values );
 
@@ -68,6 +60,6 @@ class Filter extends Field{
 			$value = $raw[ $key ];
 		}
 
-		return new Value( $value, $operator );
+		return new Value( $value, $name, $operator );
 	}
 }

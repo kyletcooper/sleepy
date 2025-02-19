@@ -45,7 +45,7 @@ class Embed extends Field{
 		$this->importSchema( $schema );
 	}
 
-	protected function shouldIncludeEmbed(){
+	protected function shouldInclude(){
 		$request = API::request();
 		$name = static::$stack->values()->reverse()->join(".");
 		$include = $request->values()->get( $this->model::getEmbedFieldsName() );
@@ -65,7 +65,7 @@ class Embed extends Field{
 		$output = null;
 
 		if( $applyLayout ){
-			if( $this->shouldIncludeEmbed() && ! is_null( $value ) ){
+			if( $this->shouldInclude() && ! is_null( $value ) ){
 				$output = $value->toApi();
 			}
 			else if( $this->isMergedWithLink() && ! is_null( $value ) ){

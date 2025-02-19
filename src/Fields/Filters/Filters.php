@@ -14,41 +14,36 @@ use WRD\Sleepy\Schema\Schema;
 class Filters {
 	use Macroable;
 
-	static public function text( string $column ): Filter{
+	static public function text(): Filter{
 		return Filter::string()
-			->operator( [ Operator::Equals, Operator::NotEquals ] )
-			->column( $column );
+			->operator( [ Operator::Equals, Operator::NotEquals ] );
 	}
 
-	static public function numeric( string $column ): Filter{
+	static public function numeric(): Filter{
 		return Filter::create( [ Schema::NUMBER, Schema::INTEGER ] )
-			->operator( [ Operator::Equals, Operator::NotEquals, Operator::Greater, Operator::GreaterEquals, Operator::Lesser, Operator::LesserEquals ] )
-			->column( $column );
+			->operator( [ Operator::Equals, Operator::NotEquals, Operator::Greater, Operator::GreaterEquals, Operator::Lesser, Operator::LesserEquals ] );
 	}
 
-	static public function date( string $column ): Filter{
+	static public function date(): Filter{
 		return Filter::string( 'date-time' )
 			->operator( [ Operator::Equals, Operator::NotEquals, Operator::Greater, Operator::GreaterEquals, Operator::Lesser, Operator::LesserEquals ] )
-			->column( $column )
-			->query( function( Builder $builder, Value $value, Filter $filter ){
-                return $builder->whereDate( $filter->column, $value->operator->operand(), $value->value );
+			->query( function( Builder $builder, Value $value, string $name ){
+                return $builder->whereDate( $name, $value->operator->operand(), $value->value );
             });
 	}
 
-	static public function cases( string $column, array $cases ): Filter{
+	static public function cases( array $cases ): Filter{
 		return Filter::string()
 			->operator( [ Operator::Equals, Operator::NotEquals ] )
-			->custom( [ Rule::in( $cases ) ] )
-			->column( $column );
+			->custom( [ Rule::in( $cases ) ] );
 	}
 
-	static public function search( string $columns ): Filter{
+	static public function search(): Filter{
 		return Filter::string()
 			->operator( Operator::Equals )
-			->column( $columns )
-			->query( function( Builder $builder, Value $value, Filter $filter ) {
-				return $builder->where( function( Builder $builder ) use ( $value, $filter ){
-					$columns = explode( ",", $filter->column );
+			->query( function( Builder $builder, Value $value, string $name ) {
+				return $builder->where( function( Builder $builder ) use ( $value, $name ){
+					$columns = explode( ",", $name );
 
 					foreach( $columns as $column ){
 						$column = trim($column);
@@ -67,6 +62,6 @@ class Filters {
 
 		return Filter::string()
 			->operator( Operator::Equals )
-			->column( $foreignKey );
+			->alias( $foreignKey );
 	}
 }

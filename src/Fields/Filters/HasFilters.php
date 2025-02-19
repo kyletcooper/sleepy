@@ -27,7 +27,7 @@ trait HasFilters{
 					continue;
 				}
 
-				$query = $field->buildQuery( $query, $value );
+				$query = $field->buildQuery( $query, $value, $name );
 			}
 
 			return $query;

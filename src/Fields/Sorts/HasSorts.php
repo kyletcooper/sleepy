@@ -52,7 +52,7 @@ trait HasSorts{
 				return $query;
 			}
 
-			$query = $sort->buildQuery( $query, $order );
+			$query = $sort->buildQuery( $query, $order, $orderBy );
 
 			return $query;
 		} );
