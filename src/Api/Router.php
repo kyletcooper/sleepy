@@ -123,11 +123,6 @@ class Router{
 		$generator->create();
 	}
 
-	public function layouts( string $path = '/schema' ){
-		$generator = new LayoutsGenerator($path);
-		$generator->create();
-	}
-
 	public function response( ?array $data = [], int $status = 200 ){
 		return Response::json( $data, $status, [
 			'Content-Type' => 'application/hal+json'
