@@ -41,7 +41,7 @@ class ModelGenerator extends Generator{
 				->describe( 'Show the collection of models.' );
 			
 			$create = API::endpoint( 'POST', [$this->controller, "create" ] )
-				->auth( fn() => Gate::allows( 'create', static::class ) )
+				->auth( fn() => Gate::allows( 'create', $this->class ) )
 				->fields( $this->class::getFields( 'create' ) )
 				->responses( 201, 400, 401, 403 )
 				->describe( 'Create a new model.' );
@@ -78,7 +78,7 @@ class ModelGenerator extends Generator{
 			$this->setEndpoint( 'delete', $delete );
 			
 		})
-			->middleware( SpecifiedBinding::class . ":model," . static::class )
+			->middleware( SpecifiedBinding::class . ":model," . $this->class )
 			->schema( fn() => $this->schema );
 	}
 }
