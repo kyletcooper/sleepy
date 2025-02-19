@@ -150,7 +150,7 @@ API::base('/api', function() {
 
 Sleepy helps you quickly create restful APIs for your models using some simple shorthands, handling the routing, filtering, pagination and attribute reading/writing for you.
 
-You can create routes independently of your models, but Sleepy shines best via it's `HasApi` trait, which will instantly prepare your model to have endpoints handling the `viewAll`, `create`, `show`, `update` and `delete` actions.
+You can create routes independently of your models, but Sleepy shines best via it's `HasApi` trait, which will instantly prepare your model to have endpoints handling the `viewAny`, `create`, `show`, `update` and `delete` actions.
 
 ## Schema-First
 
@@ -568,7 +568,7 @@ Paginated results push the models into the `items` field. Metadata about the pag
 
 ## Model Shorthand
 
-When using the `API::model()` shorthand, Sleepy will assume you have a standard Laravel policy for your model. It'll setup auth guards for `viewAll`, `create`, `view`, `update`, and `destroy`.
+When using the `API::model()` shorthand, Sleepy will assume you have a standard Laravel policy for your model. It'll setup auth guards for `viewAny`, `create`, `view`, `update`, and `destroy`.
 
 ## Custom Routes
 

@@ -3,17 +3,23 @@
 namespace WRD\Sleepy\Fields\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use WRD\Sleepy\Fields\Concerns\BuildsQuery;
+use WRD\Sleepy\Fields\Concerns\Query;
 use WRD\Sleepy\Fields\Field;
 use WRD\Sleepy\Fields\Filters\Operator;
 use WRD\Sleepy\Schema\Schema;
 
 class Filter extends Field{
-	use BuildsQuery;
+	use Query;
 
 	public ?array $operators = null;
 
-	public ?string $column = null;
+	public function __construct( array|string $types = "" )
+	{
+		parent::__construct( $types );
+
+		$this->queryCallback = fn( Builder $builder, mixed $value, string $name ) =>
+			$builder->where( $name, $value->operator->operand(), $value->value );
+	}
 
 	public function operator( Operator|array $operators ): static{
 		if( ! is_array( $operators ) ){
@@ -40,16 +46,6 @@ class Filter extends Field{
 		return $this;
 	}
 
-	public function column( ?string $column ): static{
-		$this->column = $column;
-
-		return $this;
-	}
-
-	protected function defaultQuery( Builder $builder, Value $value ): Builder{
-		return $builder->where( $this->column, $value->operator->operand(), $value->value );
-	}
-
 	public function getInputValue(string $name, array $values): Value {
 		$raw = parent::getInputValue( $name, $values );
 
@@ -64,6 +60,6 @@ class Filter extends Field{
 			$value = $raw[ $key ];
 		}
 
-		return new Value( $value, $operator );
+		return new Value( $value, $name, $operator );
 	}
 }

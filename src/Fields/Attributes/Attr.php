@@ -3,22 +3,23 @@
 namespace WRD\Sleepy\Fields\Attributes;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 use WRD\Sleepy\Schema\Schema;
 
 class Attr{
+	use Macroable;
+
 	static public function key(): Attribute{
 		return Attribute::string()
 			->readonly()
-			->getOutputVia( fn( string $name, Model $model ) => $model->getKey() );
+			->read( fn( string $name, Model $model ) => $model->getKey() );
 	}
 
 	static public function basename(): Attribute{
 		return Attribute::string()
 			->readonly()
-			->getOutputVia( fn( string $name, Model $model ) => strtolower( class_basename( $model::class ) ) );
+			->read( fn( string $name, Model $model ) => strtolower( class_basename( $model::class ) ) );
 	}
-
-	// TODO: Date
 
 	static public function belongsTo( string $ownerModel, ?string $ownerKey = null ): Attribute {
 		if( is_null( $ownerKey ) ){
@@ -28,7 +29,7 @@ class Attr{
 		return Attribute::create([Schema::INTEGER, Schema::STRING, Schema::NULL])
 			->custom( 'exists:' . $ownerModel . ',' . $ownerKey )
 			->writeonly()
-			->update( function( Model $model, string $name, mixed $value ) use ( $ownerModel ) {
+			->write( function( Model $model, string $name, mixed $value ) use ( $ownerModel ) {
 				$attachment = $ownerModel::findOrFail( $value );
 				$model->$name()->associate( $attachment );
 

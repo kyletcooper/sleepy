@@ -12,7 +12,7 @@ use WRD\Sleepy\Http\Exceptions\ApiUnauthenticatedException;
 use WRD\Sleepy\Http\Exceptions\ApiUnauthorizedException;
 use WRD\Sleepy\Http\Requests\ApiRequest;
 use WRD\Sleepy\Schema\Layouts\Api\Route as ApiRoute;
-use WRD\Sleepy\Schema\Layouts\Link;
+use WRD\Sleepy\Layouts\Link;
 
 abstract class ApiNode{
 	protected string $path = "";
@@ -97,9 +97,10 @@ abstract class ApiNode{
 			$meta['templated'] = true;
 		}
 
-		$layout = new Link( $meta );
-
-		return $layout->presentValue( $this->getUrl() );
+		return (new Link)->present([
+			'href' => $this->getUrl(),
+			...$meta,
+		]);
 	}
 
 	/**

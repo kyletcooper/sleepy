@@ -4,13 +4,12 @@ namespace WRD\Sleepy\Api;
 
 use Closure;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use WRD\Sleepy\Fields\Field;
+use WRD\Sleepy\Api\Generators\LayoutsGenerator;
+use WRD\Sleepy\Api\Generators\LoginGenerator;
 use WRD\Sleepy\Http\Exceptions\ApiFieldsException;
 use WRD\Sleepy\Http\Requests\ApiRequest;
 use WRD\Sleepy\Schema\Exceptions\SchemaException;
-use WRD\Sleepy\Schema\Schema;
 use WRD\Sleepy\Support\Stack;
 use WRD\Sleepy\Support\Tree\NodeType;
 
@@ -104,7 +103,7 @@ class Router{
 		return $route;
 	}
 
-	public function endpoint( array|string $method, callable $action ): Endpoint{
+	public function endpoint( array|string $method, ?callable $action = null ): Endpoint{
 		if( $this->routeStack->isEmpty() ){
 			throw new Exception( 'API endpoints must be registered within a route.' );
 		}
@@ -125,59 +124,8 @@ class Router{
 	}
 
 	public function login( string $path = '/session' ){
-		$schema = Schema::object([
-			'authenticated' => Schema::boolean()
-				->describe( 'Indicates if you are currently logged-in.' ),
-			'id' => Schema::create( [ Schema::INTEGER, Schema::STRING ] )
-				->nullable()
-				->describe( 'The ID of the user you are logged-in as, or null if not logged-in.' )
-		]);
-
-		function getAuthObject(){
-			return [
-				'authenticated' => Auth::check(),
-				'id' => Auth::id()
-			];
-		}
-
-		return $this->route( $path, function(){
-			$this->endpoint( 'GET', fn() => getAuthObject() )
-			->describe( 'Check the status of your session.' )
-			->responses( 200 );
-
-			$this->endpoint( 'POST', function( ApiRequest $request ){
-				if( Auth::attempt( $request->values()->all() ) ){
-					$request->session()->regenerate();
-				}
-
-				return getAuthObject();
-			})
-			->fields([
-				'email' => Field::string( 'email' )
-					->required()
-					->describe( 'The email address of the user you want to log in as.' ),
-				'password' => Field::string()
-					->required()
-					->describe( 'The password for the user.' )
-			])
-			->describe( 'Begin an authenticated session by logging-in.' )
-			->responses( 200, 400 );
-
-			$this->endpoint( 'DELETE', function( ApiRequest $request ){
-				if( Auth::check() ){
-					Auth::logout();
-
-					$request->session()->invalidate();
-					$request->session()->regenerateToken();
-				}
-
-				return getAuthObject();
-			})
-			->describe( 'Log-out, invalidating the current session.' )
-			->responses( 200 );
-		})
-		->describe( 'Manage a stateful session authentication' )
-		->schema( $schema );
+		$generator = new LoginGenerator($path);
+		$generator->create();
 	}
 
 	public function response( ?array $data = [], int $status = 200 ){

@@ -8,8 +8,8 @@ use WRD\Sleepy\Schema\Schema;
 trait HasLinks{
 	static public function links(): array{
 		return [
-			'self' => Link::self(),
-			'collection' => Link::collection(),
+			'self' => Links::self(),
+			'collection' => Links::collection(),
 		];
 	}
 
