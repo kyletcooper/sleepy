@@ -2,10 +2,8 @@
 
 namespace WRD\Sleepy\Schema;
 
-use BadMethodCallException;
 use JsonSerializable;
 use ReflectionClass;
-use WRD\Sleepy\Layouts\Layout;
 
 /**
  * Intentional diversions:
@@ -87,8 +85,6 @@ class Schema implements JsonSerializable{
 
 	public array|string|null $custom = null;
 
-	protected ?Layout $layout = null;
-
 	public function __construct(array|string $types = "")
 	{
 		$this->type( $types );
@@ -131,25 +127,6 @@ class Schema implements JsonSerializable{
 
 	static public function empty(): static{
 		return ( new static( [] ) );
-	}
-
-	static public function __callStatic( $method, $args ) {
-		$inst = static::empty();
-
-		switch( $method ){
-			case "enum": 
-				return $inst->enum( ...$args );
-
-			case "const": 
-				return $inst->const( ...$args );
-
-			case "layout": 
-				return $inst->layout( ...$args );
-		}
-
-		throw new BadMethodCallException(sprintf(
-            'Call to undefined method %s::%s()', static::class, $method
-        ));
 	}
 
 	public function type(array|string $types = ""): static{
@@ -350,14 +327,6 @@ class Schema implements JsonSerializable{
 
 	public function custom(array|string $rules): static{
 		$this->custom = $rules;
-
-		return $this;
-	}
-
-	public function layout( Layout $layout ): static{
-		$this->layout = $layout;
-		
-		$this->importSchema( $layout->schema() );
 
 		return $this;
 	}
