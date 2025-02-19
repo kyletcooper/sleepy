@@ -58,24 +58,29 @@ class Router{
 		return $this->base;
 	}
 
-	public function group( string $path, ?Closure $group ): Group{
+	public function group( string $path, ?Closure $callback ): Group{
 		if( ! isset( $this->base ) ){
 			throw new Exception( 'API groups must be registered within a base.' );
 		}
 
-		$path = new Group( $path );
+		$group = new Group( $path );
 
-		$this->base->addChild( $path );
+		if( $this->groupStack->isEmpty() ){
+			$this->base->addChild( $group );
+		}
+		else{
+			$this->groupStack->top()->addChild( $group );
+		}
 
-		if( ! is_null( $group ) ){
-			$this->groupStack->push( $path );
+		if( ! is_null( $callback ) ){
+			$this->groupStack->push( $group );
 			
-			call_user_func( $group );
+			call_user_func( $callback );
 			
 			$this->groupStack->pop();
 		}
 
-		return $path;
+		return $group;
 	}
 
 	public function route( string $path, ?Closure $group ): Route{

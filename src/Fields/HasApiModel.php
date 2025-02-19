@@ -88,7 +88,7 @@ trait HasApiModel{
 
 	static public function registerApiRoutes(){
 		( new static() )->bootIfNotBooted();
-
+    
 		$generator = new ModelGenerator( static::class );
 		
 		$generator->create();

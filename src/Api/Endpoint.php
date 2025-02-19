@@ -32,7 +32,7 @@ class Endpoint extends ApiNode{
 
 		$this->path = '';
 		$this->methods = $methods;
-		
+
 		if( ! is_null($callback) ){
 			$this->callback = $callback;
 		}
@@ -46,13 +46,13 @@ class Endpoint extends ApiNode{
 
 	public function responses( int ...$responseCodes ): static{
 		$this->responseCodes = $responseCodes;
-		
+
 		return $this;
 	}
 
 	public function fields( array $fields ): static{
 		$this->fields = array_merge( $this->fields, $fields );
-		
+
 		return $this;
 	}
 
@@ -102,9 +102,10 @@ class Endpoint extends ApiNode{
 	}
 
 	public function runAction( Request $request, ...$params ): mixed{
+		$request = API::request();
+
 		$this->checkAuth( $request, ...$params );
 
-		$request = API::request();
 		$result = call_user_func( $this->callback, $request, ...$params );
 
 		if( is_a( $result, JsonResponse::class ) ){

@@ -28,9 +28,14 @@
 		"preferred-install": "dist",
 		"optimize-autoloader": true
 	},
-	"laravel": {
-		"providers": [
-			"WRD\\Sleepy\\Providers\\SleepyServiceProvider"
-		]
+	"extra": {
+		"laravel": {
+			"providers": [
+				"WRD\\Sleepy\\Providers\\SleepyServiceProvider"
+			],
+			"aliases": {
+				"API": "WRD\\Sleepy\\Support\\Facades\\API"
+			}
+		}
 	}
 }
