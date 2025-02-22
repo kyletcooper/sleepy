@@ -176,4 +176,8 @@ class Router{
 
 		return [ 'values' => $values, 'errors' => $errors ];
 	}
+
+	public function debug(){
+		dd( $this->base, $this->groupStack, $this->routeStack );
+	}
 }

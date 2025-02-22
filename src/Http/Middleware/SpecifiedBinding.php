@@ -15,14 +15,18 @@ class SpecifiedBinding{
     public function handle(Request $request, Closure $next, string $name, string $class)
     {
         if( $request->route()->hasParameter($name) ){
-            $value = $request->route()->parameter($name);
-            $inst = (new $class())->resolveRouteBinding($value);
             
-            if( ! $inst ){
+            $value = $request->route()->parameter($name);
+
+            if( is_string( $value ) || is_int( $value ) ){
+                $value = (new $class())->resolveRouteBinding($value);
+            }
+            
+            if( ! $value ){
                 abort( new ApiNotFoundException() );
             }
 
-            $request->route()->setParameter($name, $inst);
+            $request->route()->setParameter($name, $value);
         }
  
         return $next($request);

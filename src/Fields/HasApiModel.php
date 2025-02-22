@@ -2,6 +2,7 @@
 
 namespace WRD\Sleepy\Fields;
 
+use Closure;
 use Illuminate\Support\Collection;
 use WRD\Sleepy\Api\Endpoint;
 use WRD\Sleepy\Api\Generators\ModelGenerator;
@@ -26,8 +27,12 @@ trait HasApiModel{
 		return $json;
 	}
 
+	static public function getApiName(): string{
+		return strtolower( class_basename( static::class ) );
+	}
+
 	static public function getRouteBase(): string {
-		return '/' . strtolower( class_basename( static::class ) );
+		return '/' . static::getApiName();
 	}
 
 	static public function getSchema(): Schema{
@@ -75,7 +80,7 @@ trait HasApiModel{
 	public function getSelfUrl(): ?string{
 		$ep = static::getEndpoint( "show" );
 
-		$params = [ 'model' => $this ] ;
+		$params = [ $this->getApiName() => $this ] ;
 
 		return $ep->getUrl( $params );
 	}
@@ -86,10 +91,10 @@ trait HasApiModel{
 		return $ep->getUrl();
 	}
 
-	static public function registerApiRoutes(){
+	static public function registerApiRoutes( ?Closure $callback = null ){
 		( new static() )->bootIfNotBooted();
     
-		$generator = new ModelGenerator( static::class );
+		$generator = new ModelGenerator( static::class, $callback );
 		
 		$generator->create();
 	}

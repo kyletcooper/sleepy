@@ -2,6 +2,7 @@
 
 namespace WRD\Sleepy\Providers;
 
+use Closure;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 use WRD\Sleepy\Api\Generators\LoginGenerator;
@@ -19,8 +20,8 @@ final class SleepyServiceProvider extends ServiceProvider {
 			return new Router();
 	    });
 
-		Router::macro( 'model', function( string $model ){
-			return $model::registerApiRoutes();
+		Router::macro( 'model', function( string $model, ?Closure $callback = null ){
+			return $model::registerApiRoutes( $callback );
 		});
 
 		Router::macro( 'login', function( string $path = '/session' ){
