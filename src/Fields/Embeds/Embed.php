@@ -45,10 +45,14 @@ class Embed extends Field{
 		$this->importSchema( $schema );
 	}
 
-	protected function shouldInclude(){
+	protected function shouldInclude(): bool{
 		$request = API::request();
 		$name = static::$stack->values()->reverse()->join(".");
 		$include = $request->values()->get( $this->model::getEmbedFieldsName() );
+
+		if( is_null( $include ) ){
+			return false;
+		}
 
 		return in_array( $name, $include, true );
 	}
