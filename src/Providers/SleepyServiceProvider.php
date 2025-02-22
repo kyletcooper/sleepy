@@ -4,10 +4,10 @@ namespace WRD\Sleepy\Providers;
 
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
+use WRD\Sleepy\Api\Generators\LoginGenerator;
 use WRD\Sleepy\Api\Router;
 use WRD\Sleepy\Console\Commands\GenerateMarkdownCommand;
 use WRD\Sleepy\Console\Commands\ListEndpointsCommand;
-use WRD\Sleepy\Http\Requests\ApiRequest;
 
 final class SleepyServiceProvider extends ServiceProvider {
 	public function register(): void {
@@ -18,6 +18,15 @@ final class SleepyServiceProvider extends ServiceProvider {
 		$this->app->bind( 'apiRouter', function(){
 			return new Router();
 	    });
+
+		Router::macro( 'model', function( string $model ){
+			return $model::registerApiRoutes();
+		});
+
+		Router::macro( 'login', function( string $path = '/session' ){
+			$generator = new LoginGenerator($path);
+			$generator->create();
+		});
 	}
 
 	public function boot(): void {

@@ -5,8 +5,7 @@ namespace WRD\Sleepy\Api;
 use Closure;
 use Exception;
 use Illuminate\Support\Facades\Response;
-use WRD\Sleepy\Api\Generators\LayoutsGenerator;
-use WRD\Sleepy\Api\Generators\LoginGenerator;
+use Illuminate\Support\Traits\Macroable;
 use WRD\Sleepy\Http\Exceptions\ApiFieldsException;
 use WRD\Sleepy\Http\Requests\ApiRequest;
 use WRD\Sleepy\Schema\Exceptions\SchemaException;
@@ -14,6 +13,8 @@ use WRD\Sleepy\Support\Stack;
 use WRD\Sleepy\Support\Tree\NodeType;
 
 class Router{
+	use Macroable;
+
 	private Base $base;
 
 	/**
@@ -117,15 +118,6 @@ class Router{
 		$this->routeStack->top()->addChild( $endpoint );
 
 		return $endpoint;
-	}
-
-	public function model( string $model ){
-		return $model::registerApiRoutes();
-	}
-
-	public function login( string $path = '/session' ){
-		$generator = new LoginGenerator($path);
-		$generator->create();
 	}
 
 	public function response( ?array $data = [], int $status = 200 ){
